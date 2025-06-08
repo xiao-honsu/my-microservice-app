@@ -12,10 +12,13 @@ function App() {
   const [profile, setProfile] = useState(null);
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
+  const AUTH_BASE = 'https://auth-service-je75.onrender.com';
+  const NOTE_BASE = 'https://note-service-xn67.onrender.com';
+  const PROFILE_BASE = 'https://profile-service-itcr.onrender.com';
 
   const handleRegister = async () => {
     try {
-      await axios.post('http://localhost:4001/register', { username, password });
+      await axios.post(`${AUTH_BASE}/register`, { username, password });
       alert('Registered successfully!');
       setMode('login');
     } catch {
@@ -25,7 +28,7 @@ function App() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post('http://localhost:4001/login', { username, password });
+      const res = await axios.post(`${AUTH_BASE}/login`, { username, password });
       setToken(res.data.token);
       setMode('loggedIn');
     } catch {
@@ -34,30 +37,30 @@ function App() {
   };
 
   const fetchNotes = async () => {
-    const res = await axios.post('http://localhost:4002/my-notes', { token });
+const res = await axios.post(`${NOTE_BASE}/my-notes`, { token });
     setNotes(res.data);
   };
 
   const saveNote = async () => {
     if (!newNote.trim()) return;
-    await axios.post('http://localhost:4002/notes', { token, content: newNote });
+await axios.post(`${NOTE_BASE}/notes`, { token, content: newNote });
     setNewNote('');
     fetchNotes();
   };
 
   const changePassword = async () => {
-    await axios.post('http://localhost:4001/change-password', { token, newPassword });
+await axios.post(`${AUTH_BASE}/change-password`, { token, newPassword });
     alert('Password changed!');
     setNewPassword('');
   };
 
   const fetchProfile = async () => {
-  const res = await axios.post('http://localhost:4003/get-profile', { token });
+const res = await axios.post(`${PROFILE_BASE}/get-profile`, { token });
   setProfile(res.data);
   };
 
   const updateProfile = async () => {
-    await axios.post('http://localhost:4003/update-profile', { token, name, bio });
+await axios.post(`${PROFILE_BASE}/update-profile`, { token, name, bio });
     fetchProfile();
   };
 
